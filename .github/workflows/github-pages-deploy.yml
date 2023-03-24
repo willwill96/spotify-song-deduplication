@@ -44,7 +44,7 @@ jobs:
         pnpm build
         export PNPM_HOME="/home/runner/.local/share/pnpm"
         SHELL=$SHELL pnpm setup
-        export PATH="$PNPM_HOME:$PATH
+        export PATH="$PNPM_HOME:$PATH"
         source /home/runner/.bashrc
         pnpm add -g gh-pages
         git config user.name github-action
