@@ -26,7 +26,7 @@ jobs:
     - name: Setup pnpm
       run: |
         PNPM_HOME="/root/.local/share/pnpm"
-        ENV PATH="${PATH}:${PNPM_HOME}"
+        PATH="${PATH}:${PNPM_HOME}"
         pnpm setup
     - name: Get pnpm store directory
       id: pnpm-cache
