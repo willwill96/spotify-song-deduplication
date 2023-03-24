@@ -28,6 +28,7 @@ jobs:
         SHELL=bash
         PNPM_HOME="/root/.local/share/pnpm"
         PATH="${PATH}:${PNPM_HOME}"
+        source /root/.bashrc
         pnpm setup
     - name: Get pnpm store directory
       id: pnpm-cache
