@@ -42,9 +42,6 @@ jobs:
     - name: Build App
       run: |
         pnpm build
-        PNPM_HOME="/root/.local/share/pnpm"
-        PATH="${PATH}:${PNPM_HOME}"
-        BASH_VERSION=1
         SHELL=$SHELL pnpm setup
         pnpm add -g gh-pages
         git config user.name github-action
