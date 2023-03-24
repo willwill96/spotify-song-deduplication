@@ -11,20 +11,36 @@ jobs:
       matrix:
         node-version: [16]
     steps:
-    - uses: actions/checkout@v3
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 7
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2.0.1
+      id: pnpm-install
+      with:
+        version: 7
+        run_install: false
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+    - name: Setup pnpm cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+            ${{ runner.os }}-pnpm-store-
     - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-    - run: pnpm build
-    - run: pnpm add -g gh-pages
-    - run: git config user.name github-action
-    - run: git config user.email github-actions@github.com
-    - run: git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-    - run: pnpm gh-pages -d dist/
+      run: pnpm install --frozen-lockfile    
+    - name: Build App
+      run: |
+        pnpm build
+        pnpm add -g gh-pages
+        git config user.name github-action
+        git config user.email github-actions@github.com
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        pnpm gh-pages -d dist/
