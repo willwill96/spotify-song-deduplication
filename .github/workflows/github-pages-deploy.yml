@@ -42,6 +42,7 @@ jobs:
     - name: Build App
       run: |
         pnpm build
+        export PNPM_HOME="/home/runner/.local/share/pnpm
         SHELL=$SHELL pnpm setup
         source /home/runner/.bashrc
         pnpm add -g gh-pages
