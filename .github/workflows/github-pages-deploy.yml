@@ -24,7 +24,10 @@ jobs:
         version: 7
         run_install: false
     - name: Setup pnpm
-      run: pnpm setup
+      run: |
+        PNPM_HOME="/root/.local/share/pnpm"
+        ENV PATH="${PATH}:${PNPM_HOME}"
+        pnpm setup
     - name: Get pnpm store directory
       id: pnpm-cache
       run: |
