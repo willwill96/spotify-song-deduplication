@@ -25,10 +25,7 @@ jobs:
         run_install: false
     - name: Setup pnpm
       run: |
-        PNPM_HOME="/root/.local/share/pnpm"
-        PATH="${PATH}:${PNPM_HOME}"
-        BASH_VERSION=1
-        SHELL=$SHELL pnpm setup
+
     - name: Get pnpm store directory
       id: pnpm-cache
       run: |
@@ -45,6 +42,10 @@ jobs:
     - name: Build App
       run: |
         pnpm build
+        PNPM_HOME="/root/.local/share/pnpm"
+        PATH="${PATH}:${PNPM_HOME}"
+        BASH_VERSION=1
+        SHELL=$SHELL pnpm setup
         pnpm add -g gh-pages
         git config user.name github-action
         git config user.email github-actions@github.com
