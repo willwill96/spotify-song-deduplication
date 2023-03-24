@@ -43,6 +43,7 @@ jobs:
       run: |
         pnpm build
         SHELL=$SHELL pnpm setup
+        source /home/runner/.bashrc
         pnpm add -g gh-pages
         git config user.name github-action
         git config user.email github-actions@github.com
