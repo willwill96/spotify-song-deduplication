@@ -28,7 +28,7 @@ jobs:
         PNPM_HOME="/root/.local/share/pnpm"
         PATH="${PATH}:${PNPM_HOME}"
         BASH_VERSION=1
-        pnpm setup
+        SHELL=$SHELL pnpm setup
     - name: Get pnpm store directory
       id: pnpm-cache
       run: |
