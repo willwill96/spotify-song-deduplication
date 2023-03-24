@@ -25,6 +25,7 @@ jobs:
         run_install: false
     - name: Setup pnpm
       run: |
+        SHELL=bash
         PNPM_HOME="/root/.local/share/pnpm"
         PATH="${PATH}:${PNPM_HOME}"
         pnpm setup
