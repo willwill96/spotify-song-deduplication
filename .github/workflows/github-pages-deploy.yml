@@ -41,6 +41,8 @@ jobs:
       run: pnpm install --frozen-lockfile    
     - name: Build App
       run: |
+        SITE_DOMAIN="https://willwill96.github.io",
+        BASE_URL="/spotify-song-deduplication"
         pnpm build
         export PNPM_HOME="/home/runner/.local/share/pnpm"
         SHELL=$SHELL pnpm setup
