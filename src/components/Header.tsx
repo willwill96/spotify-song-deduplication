@@ -11,7 +11,7 @@ function HelloWorld(props: { title: string }) {
   console.log(elements.html.length);
   return (
     <header class="flex h-14 w-full items-center whitespace-nowrap bg-green-200 px-2 lg:h-16">
-      <a aria-label="Home" title="Home" href="/" class="flex-shrink-0">
+      <a aria-label="Home" title="Home" href={`${import.meta.env.PUBLIC_BASE_URL}/`} class="flex-shrink-0">
         <img class="mx-2 h-9 w-9 rounded-full" src="/logo.png" />
       </a>
       <span class="text-lg font-bold">{props.title}</span>
