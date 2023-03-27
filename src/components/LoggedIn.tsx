@@ -1,5 +1,6 @@
 import { createQuery } from "@tanstack/solid-query";
-import { createSignal, For, onMount } from "solid-js";
+import clsx from "clsx";
+import { createSignal, For } from "solid-js";
 import type { SpotifyClient } from "../utils/spotify";
 import SpotifyIcon from "./icons/SpotifyIcon";
 
@@ -16,6 +17,7 @@ interface Playlist {
 }
 
 const CheckboxItem = (props: {
+  class?: string;
   checked: boolean;
   onSelect: () => void;
   label: string;
@@ -40,9 +42,12 @@ const CheckboxItem = (props: {
       }}
       tabIndex="0"
       role="checkbox"
-      class="flex h-24 w-full cursor-pointer items-center rounded-lg border bg-green-100 text-lg font-semibold focus-within:border-4 focus-within:border-green-600 hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
+      class={clsx(
+        props.class,
+        "flex h-24 w-full cursor-pointer items-center rounded-lg border-2 border-gray-500 bg-green-100 text-lg font-semibold focus-within:bg-green-300 focus-within:shadow-[0_1px_0px_5px_black,1px_0_0px_5px_black,0_-1px_0_5px_black,-1px_0_0_5px_black] hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
+      )}
     >
-      <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
+      <div class="block aspect-square h-full rounded-l-lg bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
         {props.imageUrl ? (
           <img class="aspect-square h-full" src={props.imageUrl} />
         ) : (
@@ -126,13 +131,17 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
           <span class="block text-center">
             Select the playlists you want to search for duplicate songs:
           </span>
-          <div class="relative flex flex-col gap-4 py-4" role="group">
+          <div
+            class="relative grid gap-4 py-4 lg:grid-cols-2 xl:grid-cols-4"
+            role="group"
+          >
             <CheckboxItem
+              class="lg:col-span-2 xl:col-span-4"
               checked={isEveryPlaylistToggled()}
               onSelect={() => {
                 onToggleAll();
               }}
-              label="All Playlists"
+              label="Search All Playlists for duplicates"
             />
             <CheckboxItem
               checked={isSongSelected(likedSongsItem)}
