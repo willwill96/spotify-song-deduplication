@@ -82,7 +82,9 @@ const getTokens = async ({
     "https://accounts.spotify.com/api/token?" +
       new URLSearchParams({
         code,
-        redirect_uri: `${import.meta.env.PUBLIC_SITE_DOMAIN}${import.meta.env.PUBLIC_BASE_URL}`,
+        redirect_uri: `${import.meta.env.PUBLIC_SITE_DOMAIN}${
+          import.meta.env.PUBLIC_BASE_URL
+        }`,
         grant_type: "authorization_code",
         code_verifier: codeVerifier,
         client_id: SPOTIFY_CLIENT_ID,
@@ -234,7 +236,9 @@ export class SpotifyClient {
         client_id: SPOTIFY_CLIENT_ID,
         scope:
           "playlist-read-private playlist-modify-private playlist-modify-public playlist-read-collaborative",
-        redirect_uri: `${import.meta.env.PUBLIC_SITE_DOMAIN}${import.meta.env.PUBLIC_BASE_URL}`,
+        redirect_uri: `${import.meta.env.PUBLIC_SITE_DOMAIN}${
+          import.meta.env.PUBLIC_BASE_URL
+        }`,
         code_challenge_method: "S256",
         code_challenge: await generateCodeChallenge(codeVerifier),
       }).toString();

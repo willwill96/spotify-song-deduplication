@@ -43,14 +43,14 @@ const App = () => {
               class={clsx(
                 bottomShadowEnabled() &&
                   "shadow-[inset_0px_-40px_20px_-20px_rgba(0,0,0,0.3)]",
-                "pointer-events-none absolute top-0 z-10 h-full w-full transition-[box-shadow] duration-500 delay-50"
+                "delay-50 pointer-events-none absolute top-0 z-10 h-full w-full transition-[box-shadow] duration-500"
               )}
             />
             <div
               class={clsx(
                 topShadowEnabled() &&
                   "shadow-[inset_0_40px_20px_-20px_rgba(0,0,0,0.3)]",
-                "pointer-events-none absolute top-0 z-10 h-full w-full transition-[box-shadow] duration-500 delay-50"
+                "delay-50 pointer-events-none absolute top-0 z-10 h-full w-full transition-[box-shadow] duration-500"
               )}
             />
 

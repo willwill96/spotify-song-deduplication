@@ -7,9 +7,9 @@ interface Playlist {
   id: string;
   name: string;
   owner: {
-    id: string
-  }
-  collaborative: boolean
+    id: string;
+  };
+  collaborative: boolean;
 }
 
 function LoggedIn(props: { spotifyClient: SpotifyClient }) {
@@ -44,9 +44,9 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     id: "__liked_songs",
     name: "Liked Songs",
     owner: {
-        id: userQuery.data.id || ''
+      id: userQuery.data.id || "",
     },
-    collaborative: false
+    collaborative: false,
   };
   const isEveryPlaylistToggled = () => {
     return items().length + 1 === selectedPlaylists().length;
@@ -67,7 +67,8 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     }
   };
 
-  const isSongSelected = ((item: Playlist) => Boolean(selectedPlaylists().find(({ id }) => item.id === id)))
+  const isSongSelected = (item: Playlist) =>
+    Boolean(selectedPlaylists().find(({ id }) => item.id === id));
   return (
     <div class="relative col-span-12 h-full grid-cols-1 px-6">
       {playlistQuery.isLoading ||
@@ -102,9 +103,11 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
               <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
                 <SpotifyIcon />
               </div>
-              <span class="block flex-grow text-center p-4">
+              <span class="block flex-grow p-4 text-center">
                 All Playlists
-                {isEveryPlaylistToggled() && <span class="float-right">{" \u2713"}</span>}
+                {isEveryPlaylistToggled() && (
+                  <span class="float-right">{" \u2713"}</span>
+                )}
               </span>
             </div>
             <div
@@ -130,18 +133,18 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
               <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
                 <SpotifyIcon />
               </div>
-              <span class="block flex-grow text-center p-4">
+              <span class="block flex-grow p-4 text-center">
                 Liked Songs
-                {isSongSelected(likedSongsItem) && <span class="float-right">{" \u2713"}</span>}
+                {isSongSelected(likedSongsItem) && (
+                  <span class="float-right">{" \u2713"}</span>
+                )}
               </span>
             </div>
             <For each={items()}>
               {(item) => {
                 return (
                   <div
-                    aria-checked={
-                        isSongSelected(item
-                    )}
+                    aria-checked={isSongSelected(item)}
                     onKeyDown={(event) => {
                       // Make sure to prevent page scrolling on space down
                       if (event.key === " ") {
@@ -170,12 +173,12 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
                         <SpotifyIcon />
                       </div>
                     )}
-                    <span class="block flex-grow text-center p-4">
+                    <span class="block flex-grow p-4 text-center">
                       {item.name}
-                     
-                      {
-                        isSongSelected(item)
-                       &&  <span class="float-right">{" \u2713"}</span>}
+
+                      {isSongSelected(item) && (
+                        <span class="float-right">{" \u2713"}</span>
+                      )}
                     </span>
                   </div>
                 );
