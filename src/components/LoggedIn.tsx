@@ -9,8 +9,55 @@ interface Playlist {
   owner: {
     id: string;
   };
+  images?: {
+    url: string;
+  }[];
   collaborative: boolean;
 }
+
+const CheckboxItem = (props: {
+  checked: boolean;
+  onSelect: () => void;
+  label: string;
+  imageUrl?: false | string;
+}) => {
+  return (
+    <div
+      aria-checked={props.checked}
+      onKeyDown={(event) => {
+        // Make sure to prevent page scrolling on space down
+        if (event.key === " ") {
+          event.preventDefault();
+        }
+      }}
+      onKeyUp={(event) => {
+        if (event.key === " ") {
+          props.onSelect();
+        }
+      }}
+      onClick={() => {
+        props.onSelect();
+      }}
+      tabIndex="0"
+      role="checkbox"
+      class="flex h-24 w-full cursor-pointer items-center rounded-lg border bg-green-100 text-lg font-semibold focus-within:border-4 focus-within:border-green-600 hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
+    >
+      <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
+        {props.imageUrl ? (
+          <img class="aspect-square h-full" src={props.imageUrl} />
+        ) : (
+          <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
+            <SpotifyIcon />
+          </div>
+        )}
+      </div>
+      <span class="block flex-grow p-4 text-center">
+        {props.label}
+        {props.checked && <span class="float-right">{" \u2713"}</span>}
+      </span>
+    </div>
+  );
+};
 
 function LoggedIn(props: { spotifyClient: SpotifyClient }) {
   const playlistQuery = createQuery(
@@ -44,7 +91,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     id: "__liked_songs",
     name: "Liked Songs",
     owner: {
-      id: userQuery.data.id || "",
+      id: (userQuery.data && userQuery.data.id) || "",
     },
     collaborative: false,
   };
@@ -52,7 +99,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     return items().length + 1 === selectedPlaylists().length;
   };
 
-  const items = () =>
+  const items = (): Playlist[] =>
     playlistQuery.data &&
     playlistQuery.data.items &&
     playlistQuery.data.items.filter((item: Playlist) => {
@@ -80,107 +127,35 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
             Select the playlists you want to search for duplicate songs:
           </span>
           <div class="relative flex flex-col gap-4 py-4" role="group">
-            <div
-              aria-checked={isEveryPlaylistToggled()}
-              onKeyDown={(event) => {
-                // Make sure to prevent page scrolling on space down
-                if (event.key === " ") {
-                  event.preventDefault();
-                }
-              }}
-              onKeyUp={(event) => {
-                if (event.key === " ") {
-                  onToggleAll();
-                }
-              }}
-              onClick={() => {
+            <CheckboxItem
+              checked={isEveryPlaylistToggled()}
+              onSelect={() => {
                 onToggleAll();
               }}
-              tabIndex="0"
-              role="checkbox"
-              class="flex h-24 w-full cursor-pointer items-center rounded-lg border bg-green-100 text-lg font-semibold focus-within:border-4 focus-within:border-green-600 hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
-            >
-              <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
-                <SpotifyIcon />
-              </div>
-              <span class="block flex-grow p-4 text-center">
-                All Playlists
-                {isEveryPlaylistToggled() && (
-                  <span class="float-right">{" \u2713"}</span>
-                )}
-              </span>
-            </div>
-            <div
-              aria-checked={isSongSelected(likedSongsItem)}
-              onKeyDown={(event) => {
-                // Make sure to prevent page scrolling on space down
-                if (event.key === " ") {
-                  event.preventDefault();
-                }
-              }}
-              onKeyUp={(event) => {
-                if (event.key === " ") {
-                  onToggleCheckboxItem(likedSongsItem);
-                }
-              }}
-              onClick={() => {
+              label="All Playlists"
+            />
+            <CheckboxItem
+              checked={isSongSelected(likedSongsItem)}
+              onSelect={() => {
                 onToggleCheckboxItem(likedSongsItem);
               }}
-              tabIndex="0"
-              role="checkbox"
-              class="flex h-24 w-full cursor-pointer items-center rounded-lg border bg-green-100 text-lg font-semibold focus-within:border-4 focus-within:border-green-600 hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
-            >
-              <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
-                <SpotifyIcon />
-              </div>
-              <span class="block flex-grow p-4 text-center">
-                Liked Songs
-                {isSongSelected(likedSongsItem) && (
-                  <span class="float-right">{" \u2713"}</span>
-                )}
-              </span>
-            </div>
+              label="Liked Songs"
+            />
             <For each={items()}>
               {(item) => {
                 return (
-                  <div
-                    aria-checked={isSongSelected(item)}
-                    onKeyDown={(event) => {
-                      // Make sure to prevent page scrolling on space down
-                      if (event.key === " ") {
-                        event.preventDefault();
-                      }
-                    }}
-                    onKeyUp={(event) => {
-                      if (event.key === " ") {
-                        onToggleCheckboxItem(item);
-                      }
-                    }}
-                    onClick={() => {
+                  <CheckboxItem
+                    checked={isSongSelected(item)}
+                    onSelect={() => {
                       onToggleCheckboxItem(item);
                     }}
-                    tabIndex="0"
-                    role="checkbox"
-                    class="flex h-24 w-full cursor-pointer items-center rounded-lg border bg-green-100 text-lg font-semibold focus-within:border-4 focus-within:border-green-600 hover:bg-green-300 aria-checked:bg-green-600 aria-checked:text-white"
-                  >
-                    {item.images && item.images.length > 0 ? (
-                      <img
-                        class="aspect-square h-full"
-                        src={item.images[0].url}
-                      />
-                    ) : (
-                      <div class="block aspect-square h-full bg-black p-4 [&>svg]:h-fit [&>svg]:fill-green-600">
-                        <SpotifyIcon />
-                      </div>
-                    )}
-                    <span class="block flex-grow p-4 text-center">
-                      {item.name}
-
-                      {isSongSelected(item) && (
-                        <span class="float-right">{" \u2713"}</span>
-                      )}
-                    </span>
-                  </div>
+                    label={item.name}
+                    imageUrl={
+                      item.images &&
+                      item.images.length > 0 &&
+                      item.images[0].url
+                    }
+                  />
                 );
               }}
             </For>
