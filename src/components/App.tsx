@@ -16,7 +16,6 @@ const App = () => {
   >();
   onMount(async () => {
     const ob = new IntersectionObserver((entries) => {
-      console.log("observing");
       for (const entry of entries) {
         if (entry.target.id === "top-shadow-trigger") {
           setTopShadowEnabled(!entry.isIntersecting);

@@ -6,6 +6,10 @@ import SpotifyIcon from "./icons/SpotifyIcon";
 interface Playlist {
   id: string;
   name: string;
+  owner: {
+    id: string
+  }
+  collaborative: boolean
 }
 
 function LoggedIn(props: { spotifyClient: SpotifyClient }) {
@@ -25,7 +29,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     []
   );
 
-  const onToggleCheckboxItem = (item: { id: string; name: string }) => {
+  const onToggleCheckboxItem = (item: Playlist) => {
     const playlists = selectedPlaylists();
     if (playlists.find((subitem) => subitem.id === item.id)) {
       setSelectedPlaylists(
@@ -36,9 +40,13 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     }
   };
 
-  const likedSongsItem = {
+  const likedSongsItem: Playlist = {
     id: "__liked_songs",
     name: "Liked Songs",
+    owner: {
+        id: userQuery.data.id || ''
+    },
+    collaborative: false
   };
   const isEveryPlaylistToggled = () => {
     return items().length + 1 === selectedPlaylists().length;
@@ -47,7 +55,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
   const items = () =>
     playlistQuery.data &&
     playlistQuery.data.items &&
-    playlistQuery.data.items.filter((item) => {
+    playlistQuery.data.items.filter((item: Playlist) => {
       return item.collaborative || item.owner.id === userQuery.data.id;
     });
 
@@ -59,10 +67,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
     }
   };
 
-  const everyPlaylistToggled = () => {
-    return items().length + 1 === selectedPlaylists().length;
-  };
-
+  const isSongSelected = ((item: Playlist) => Boolean(selectedPlaylists().find(({ id }) => item.id === id)))
   return (
     <div class="relative col-span-12 h-full grid-cols-1 px-6">
       {playlistQuery.isLoading ||
@@ -75,7 +80,7 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
           </span>
           <div class="relative flex flex-col gap-4 py-4" role="group">
             <div
-              aria-checked={Boolean(isEveryPlaylistToggled())}
+              aria-checked={isEveryPlaylistToggled()}
               onKeyDown={(event) => {
                 // Make sure to prevent page scrolling on space down
                 if (event.key === " ") {
@@ -99,13 +104,11 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
               </div>
               <span class="block flex-grow text-center p-4">
                 All Playlists
-                {Boolean(isEveryPlaylistToggled()) && <span class="float-right">{" \u2713"}</span>}
+                {isEveryPlaylistToggled() && <span class="float-right">{" \u2713"}</span>}
               </span>
             </div>
             <div
-              aria-checked={Boolean(
-                selectedPlaylists().find(({ id }) => "__liked_songs" === id)
-              )}
+              aria-checked={isSongSelected(likedSongsItem)}
               onKeyDown={(event) => {
                 // Make sure to prevent page scrolling on space down
                 if (event.key === " ") {
@@ -129,17 +132,15 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
               </div>
               <span class="block flex-grow text-center p-4">
                 Liked Songs
-                {Boolean(
-                  selectedPlaylists().find(({ id }) => "__liked_songs" === id)
-                ) && <span class="float-right">{" \u2713"}</span>}
+                {isSongSelected(likedSongsItem) && <span class="float-right">{" \u2713"}</span>}
               </span>
             </div>
             <For each={items()}>
               {(item) => {
                 return (
                   <div
-                    aria-checked={Boolean(
-                      selectedPlaylists().find(({ id }) => id === item.id)
+                    aria-checked={
+                        isSongSelected(item
                     )}
                     onKeyDown={(event) => {
                       // Make sure to prevent page scrolling on space down
@@ -172,9 +173,9 @@ function LoggedIn(props: { spotifyClient: SpotifyClient }) {
                     <span class="block flex-grow text-center p-4">
                       {item.name}
                      
-                      {Boolean(
-                        selectedPlaylists().find(({ id }) => id === item.id)
-                      ) &&  <span class="float-right">{" \u2713"}</span>}
+                      {
+                        isSongSelected(item)
+                       &&  <span class="float-right">{" \u2713"}</span>}
                     </span>
                   </div>
                 );
