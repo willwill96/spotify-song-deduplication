@@ -18,7 +18,7 @@ const IconButton = (props: AnchorProps | ButtonProps) => {
       {...props}
       class={clsx(
         props.class,
-        "block cursor-pointer rounded-full hover:bg-gray-500/25 active:bg-gray-400 [&>svg]:transition-transform [&>svg]:hover:scale-110"
+        "block cursor-pointer rounded-full hover:bg-gray-500/25 active:bg-gray-400 [&>svg]:h-fit [&>svg]:transition-transform [&>svg]:hover:scale-110"
       )}
     >
       {props.children}

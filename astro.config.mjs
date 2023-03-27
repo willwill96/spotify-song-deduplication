@@ -3,11 +3,11 @@ import solidJs from "@astrojs/solid-js";
 
 import tailwind from "@astrojs/tailwind";
 
-const { SITE_DOMAIN, PUBLIC_BASE_URL } = process.env;
+const { PUBLIC_SITE_DOMAIN, PUBLIC_BASE_URL } = process.env;
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [solidJs(), tailwind()],
-  site: SITE_DOMAIN,
+  site: PUBLIC_SITE_DOMAIN,
   base: PUBLIC_BASE_URL,
 });
